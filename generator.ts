@@ -40,8 +40,10 @@ for (const route of routes) {
   paths = paths.concat(getUrls(route, INITIAL_PATH));
 }
 
-if (paths.length <= 1) throw new Error('Could not generate paths for sitemap');
-
+if (paths.length <= 1) {
+    console.error("Could not generate paths for sitemap");
+    process.exit(1);
+}
 
 const date = new Date();
 let xml: string = '';
