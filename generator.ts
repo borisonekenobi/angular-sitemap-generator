@@ -18,24 +18,26 @@ if (process.argv.length !== 3) {
 
 const INITIAL_PATH: string = process.argv[2] + (process.argv[2].endsWith("/") ? "" : "/");
 
-function getUrlTags(route: Route, prefix: string): string[] {
-  if (route.path === '' || route.path === '**') return [];
+function getUrls(route: Route, prefix: string): string[] {
+  if (route.path === '**') return [];
+  if (route.path === '' && route.redirectTo) return [];
 
-  const path: string = `${prefix}${route.path}/`;
+  let path: string = `${prefix}${route.path}`;
+  if (!path.endsWith("/")) path = path + "/";
   let paths: string[] = [path];
 
   if (route.children) {
     for (const child of route.children) {
-      paths = paths.concat(getUrlTags(child, path));
+      paths = paths.concat(getUrls(child, path));
     }
   }
 
   return paths;
 }
 
-let paths: string[] = [INITIAL_PATH];
+let paths: string[] = [];
 for (const route of routes) {
-  paths = paths.concat(getUrlTags(route, INITIAL_PATH));
+  paths = paths.concat(getUrls(route, INITIAL_PATH));
 }
 
 if (paths.length <= 1) throw new Error('Could not generate paths for sitemap');
