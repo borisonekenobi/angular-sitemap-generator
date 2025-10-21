@@ -1,6 +1,6 @@
 {
   "name": "angular-sitemap-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bin": {
     "angular-sitemap-generator": "./index.js"
   },
