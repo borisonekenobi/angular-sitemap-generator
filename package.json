@@ -1,22 +1,32 @@
 {
   "name": "angular-sitemap-generator",
   "version": "1.0.1",
-  "bin": {
-    "angular-sitemap-generator": "./index.js"
-  },
   "description": "Generates a sitemap.xml file for Angular projects",
+  "keywords": [
+    "sitemap",
+    "xml",
+    "sitemap.xml",
+    "generator",
+    "crawler",
+    "seo",
+    "google",
+    "ecosystem:node"
+  ],
   "homepage": "https://github.com/borisonekenobi/angular-sitemap-generator#readme",
   "bugs": {
     "url": "https://github.com/borisonekenobi/angular-sitemap-generator/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/borisonekenobi/angular-sitemap-generator.git"
+    "url": "git+https://github.com/borisonekenobi/angular-sitemap-generator.git"
   },
   "license": "MIT",
   "author": "Boris Vasilev",
   "type": "commonjs",
   "main": "index.js",
+  "bin": {
+    "angular-sitemap-generator": "index.js"
+  },
   "scripts": {
     "build": "tsc",
     "exec": "node ./dist/node_modules/angular-sitemap-generator/index.js",
@@ -27,5 +37,6 @@
     "@angular/platform-browser-dynamic": "^20.3.6",
     "@angular/router": "^20.3.6",
     "@types/node": "^24.9.0"
-  }
+  },
+  "devDependencies": {}
 }
