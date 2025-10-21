@@ -26,10 +26,10 @@ The `/` at the end of the URL is optional, and the generator adds it automatical
 
 ## 🧩 What It Does
 
-1. Builds your Angular project into its own **`dist/`** folder.
+1. Builds your Angular project into its own `dist/` folder.
 2. Reads your routing configuration from `src/app/app.routes.ts`.
 3. Traverses all routes (including nested `children`) to build a list of valid URLs.
-4. Creates a **`sitemap.xml`** file and places it in your project’s **`public/`** folder.
+4. Creates a `sitemap.xml` file and places it in your project’s `public/` folder.
 
 The resulting `sitemap.xml` looks like this:
 
