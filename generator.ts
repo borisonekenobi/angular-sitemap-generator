@@ -28,8 +28,9 @@ function getUrls(route: Route, prefix: string): string[] {
     if (route.path === '**') return [];
     if (route.path === '' && route.redirectTo) return [];
 
+    if (!prefix.endsWith("/")) prefix += "/";
     let path: string = `${prefix}${route.path}`;
-    if (!path.endsWith("/")) path = path + "/";
+    if (!path.endsWith("/")) path += "/";
     let paths: string[] = [path];
 
     if (route.children) {
