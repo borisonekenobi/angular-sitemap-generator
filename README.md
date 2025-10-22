@@ -53,6 +53,25 @@ The resulting `sitemap.xml` looks like this:
 
 Each route in your Angular project becomes a `<url>` entry.
 
+## ⚙️ CLI Options
+
+| Option | Description |
+|:-------|:-------------|
+| `-h`, `--help` | Shows the help menu |
+| `-v`, `--version` | Displays the current package version |
+| `-p <path>`, `--path <path>` | Sets the path where the generated `sitemap.xml` file will be saved |
+| `-r <path>`, `--robots-path <path>` | Sets the path of the `robots.txt` file |
+| `-g`, `--gen-robots` | Generates a new `robots.txt` file if one doesn’t exist |
+| `-u`, `--update-robots` | Updates the existing `robots.txt` file to include a link to the sitemap |
+
+**Example usage:**
+
+```sh
+npx angular-sitemap-generator https://example.com -p ./public/sitemap.xml -r ./public/robots.txt -g
+```
+
+---
+
 ---
 
 ## 📁 Project Requirements
