@@ -83,7 +83,9 @@ const default_robots = `User-agent: *\nAllow: /\n\nSitemap: ${sitemap_url}\n`
 
 if (options.multipage_app) {
     console.log("Building Angular project...");
-    const build_output = execSync(`ng build --base-href ${options.url}`, {stdio: "pipe"}).toString().split("\n");
+    const url_path = options.url.split("/");
+    const base_href = `/${url_path[url_path.length - 1]}/`;
+    const build_output = execSync(`ng build --base-href ${base_href}`, {stdio: "pipe"}).toString().split("\n");
     const output_path = build_output.find(line => line.startsWith("Output location: "))?.substring(17);
     if (output_path === undefined) throw new Error("Unable to build Angular project");
     const index_path = path.resolve(output_path, "browser/index.html");
