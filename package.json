@@ -1,6 +1,6 @@
 {
   "name": "angular-sitemap-generator",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Generates a sitemap.xml file for Angular projects",
   "keywords": [
     "sitemap",
