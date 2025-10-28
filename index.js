@@ -6,6 +6,8 @@ const path = require("path");
 const HELP = 'HELP';
 const VERSION = 'VERSION';
 const SITEMAP_PATH = 'SITEMAP_PATH';
+const MULTIPAGE_APP = 'MULTIPAGE_APP';
+const MPA_PATH = 'MPA_PATH';
 const ROBOTS_PATH = 'ROBOTS_PATH';
 const GEN_ROBOTS = 'GEN_ROBOTS';
 const UPDATE_ROBOTS = 'UPDATE_ROBOTS';
@@ -17,6 +19,10 @@ const options = {
     "--version": VERSION,
     "-p": SITEMAP_PATH,
     "--path": SITEMAP_PATH,
+    "-m": MPA_PATH,
+    "--mpa-path": MPA_PATH,
+    "-c": MULTIPAGE_APP,
+    "--create-mpa-dir": MULTIPAGE_APP,
     "-r": ROBOTS_PATH,
     "--robots-path": ROBOTS_PATH,
     "-g": GEN_ROBOTS,
@@ -28,6 +34,8 @@ const options = {
 let generator_options = {
     url: '',
     sitemap_path: path.join(process.cwd(), "public/sitemap.xml"),
+    mpa_path: path.join(process.cwd(), "public/"),
+    multipage_app: false,
     robots_path: path.join(process.cwd(), "public/robots.txt"),
     generate_robots: false,
     update_robots: false,
@@ -42,12 +50,14 @@ for (let i = 2; i < process.argv.length; i++) {
             console.log("Usage: npx angular-sitemap-generator [options] <url>");
             console.log();
             console.log("Options: ");
-            console.log("  -h, --help           shows help menu");
-            console.log("  -v, --version        shows package version");
-            console.log("  -p, --path           sets the path of the sitemap file");
-            console.log("  -r, --robots-path    sets the path of the robots file");
-            console.log("  -g, --gen-robots     sets the flag to generate a new robots file");
-            console.log("  -u, --update-robots  sets the flag to update the existing robots file");
+            console.log("  -h, --help            shows help menu");
+            console.log("  -v, --version         shows package version");
+            console.log("  -p, --path            sets the path of the sitemap file");
+            console.log("  -m, --mpa-path        sets the path of the mpa directories")
+            console.log("  -c, --create-mpa-dir  sets the flag to generate MPA directories (used for ghpages)")
+            console.log("  -r, --robots-path     sets the path of the robots file");
+            console.log("  -g, --gen-robots      sets the flag to generate a new robots file");
+            console.log("  -u, --update-robots   sets the flag to update the existing robots file");
             process.exit(0);
             break;
         case VERSION:
@@ -57,6 +67,12 @@ for (let i = 2; i < process.argv.length; i++) {
             break;
         case SITEMAP_PATH:
             generator_options.sitemap_path = path.resolve(process.argv[++i]);
+            break;
+        case MPA_PATH:
+            generator_options.mpa_path = path.resolve(process.argv[++i]);
+            break;
+        case MULTIPAGE_APP:
+            generator_options.multipage_app = true;
             break;
         case ROBOTS_PATH:
             generator_options.robots_path = path.resolve(process.argv[++i]);
