@@ -4,8 +4,8 @@ import "zone.js/node";
 import "@angular/compiler";
 import "@angular/platform-browser-dynamic";
 
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import {execSync} from "child_process";
 
 import {routes} from "../../src/app/app.routes";
@@ -30,6 +30,7 @@ if (options.generate_robots == undefined) throw new Error("'generate_robots' mis
 if (options.update_robots == undefined) throw new Error("'update_robots' missing from generator options");
 
 if (options.url.endsWith("/")) options.url = options.url.substring(0, options.url.length - 1);
+const url = new URL(options.url);
 
 function getUrls(route: Route, prefix: string): string[] {
     if (route.path === '**') return [];
@@ -77,14 +78,13 @@ fs.writeFileSync(options.sitemap_path, xml);
 console.log(`Generated sitemap: ${options.sitemap_path}`);
 
 const sitemap_filename = path.parse(options.sitemap_path).base;
-const sitemap_url = `${options.url}${options.url.endsWith("/") ? "" : "/"}${sitemap_filename}`;
+const sitemap_url = `${url.toString()}/${sitemap_filename}`;
 
 const default_robots = `User-agent: *\nAllow: /\n\nSitemap: ${sitemap_url}\n`
 
 if (options.multipage_app) {
     console.log("Building Angular project...");
-    const url_path = options.url.split("/");
-    const base_href = `/${url_path[url_path.length - 1]}/`;
+    const base_href = `${url.pathname}/`;
     const build_output = execSync(`ng build --base-href ${base_href}`, {stdio: "pipe"}).toString().split("\n");
     const output_path = build_output.find(line => line.startsWith("Output location: "))?.substring(17);
     if (output_path === undefined) throw new Error("Unable to build Angular project");

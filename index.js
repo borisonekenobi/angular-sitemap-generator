@@ -32,7 +32,7 @@ const options = {
 }
 
 let generator_options = {
-    url: '',
+    url: null,
     sitemap_path: path.join(process.cwd(), "public/sitemap.xml"),
     mpa_path: path.join(process.cwd(), "public/"),
     multipage_app: false,
@@ -41,6 +41,7 @@ let generator_options = {
     update_robots: false,
 }
 
+let url_provided = false;
 for (let i = 2; i < process.argv.length; i++) {
     const arg = process.argv[i];
     const option_flag = options[arg];
@@ -84,10 +85,14 @@ for (let i = 2; i < process.argv.length; i++) {
             generator_options.update_robots = true;
             break;
         default:
+            if (url_provided) throw new Error("URL already provided");
+
+            url_provided = true;
             generator_options.url = arg;
             break;
     }
 }
+if (!url_provided) throw new Error("URL not provided");
 
 try {
     console.log("Building project...");
