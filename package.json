@@ -33,10 +33,9 @@
     "test": "node ./index.js"
   },
   "dependencies": {
-    "@angular/compiler": "^20.3.6",
-    "@angular/platform-browser-dynamic": "^20.3.6",
-    "@angular/router": "^20.3.6",
     "@types/node": "^24.9.0"
   },
-  "devDependencies": {}
+  "peerDependencies": {
+    "@angular/router": ">=18"
+  }
 }

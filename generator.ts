@@ -1,9 +1,5 @@
 #!/usr/in/env node
 
-import "zone.js/node";
-import "@angular/compiler";
-import "@angular/platform-browser-dynamic";
-
 import fs from "node:fs";
 import path from "node:path";
 import {execSync} from "child_process";
