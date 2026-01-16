@@ -46,6 +46,11 @@ function getUrls(route: Route, prefix: string): string[] {
     return paths;
 }
 
+if (routes.length === 0) {
+    console.log("No routes found.");
+    process.exit(0);
+}
+
 let paths: string[] = [];
 for (const route of routes) {
     paths = paths.concat(getUrls(route, ""));
