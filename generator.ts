@@ -1,5 +1,7 @@
 #!/usr/in/env node
 
+import '@angular/compiler';
+
 import fs from "node:fs";
 import path from "node:path";
 import {execSync} from "child_process";

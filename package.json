@@ -36,6 +36,7 @@
     "@types/node": "^24.9.0"
   },
   "peerDependencies": {
+    "@angular/compiler": ">=18",
     "@angular/router": ">=18"
   }
 }
