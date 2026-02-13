@@ -1,39 +1,34 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
-name: Node.js Package
-
+name: npm publish
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      is_prerelease:
+        description: "will mark package as prerelease if true, latest if false"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm ci
-#      - run: npm test
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v5
-        with:
           node-version: 24
-          registry-url: "https://registry.npmjs.org"
-      - run: |
-          NODE_AUTH_TOKEN="" npm publish
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: Publish to npm
+        run: |
+          if [ "${{ inputs.is_prerelease }}" == "true" ]; then
+            npm publish --tag prerelease
+          else
+            npm publish --tag latest
+          fi

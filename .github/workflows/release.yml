@@ -1,0 +1,60 @@
+name: release.yml
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test-angular18:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: echo "execute angular18 unit tests"
+
+  test-angular19:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: echo "execute angular19 unit tests"
+
+  test-angular20:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: echo "execute angular20 unit tests"
+
+  test-angular21:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: echo "execute angular21 unit tests"
+
+  publish-npm:
+    needs:
+      - test-angular18
+      - test-angular19
+      - test-angular20
+      - test-angular21
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - uses: ./.github/workflows/npm-publish.yml
