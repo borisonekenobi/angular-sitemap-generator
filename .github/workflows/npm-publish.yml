@@ -25,9 +25,10 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
       - run: npm ci
+      - run: npm pkg get version
       - name: Publish to npm
         run: |
-          if [ "${{ inputs.is_prerelease }}" == "true" ]; then
+          if ${{ inputs.is_prerelease }}; then
             npm publish --tag prerelease
           else
             npm publish --tag latest
