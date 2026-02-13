@@ -1,0 +1,321 @@
+name: workflow.yml
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  version-check:
+    name: Version Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Version Check
+        run: node ./.github/scripts/check-current-version.js
+
+  get-next-prerelease:
+    name: Get Next Prerelease Version
+    needs: version-check
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Prerelease Version
+        id: get_version
+        run: echo "version=$(node ./.github/scripts/get-prerelease-version.js)" >> $GITHUB_OUTPUT
+
+  publish-prerelease:
+    name: Publish Prerelease Version
+    needs: get-next-prerelease
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Create Prerelease Version
+        run: npm version ${{ needs.get-next-prerelease.outputs.version }} --no-git-tag-version
+
+      - name: Pack Prerelease Version
+        run: npm pack
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          path: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+
+  test-angular18:
+    name: Test Angular 18
+    needs: [ get-next-prerelease, publish-prerelease ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/angular18
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          path: tests/angular18
+
+      - name: Install Prerelease Version
+        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+
+      - name: Generate Sitemap
+        run: npm run test
+
+      - name: Upload Generated Sitemap
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular18-sitemap.xml
+          path: tests/angular18/public/sitemap.xml
+
+      - name: Upload Generated Robots.txt
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular18-robots.txt
+          path: tests/angular18/public/robots.txt
+
+  analyze-angular18:
+    name: Analyze Angular 18 Output
+    needs: test-angular18
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular18-sitemap.xml
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular18-robots.txt
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Analyze Results
+        run: node ./.github/scripts/analyze-results.js 18
+
+  test-angular19:
+    name: Test Angular 19
+    needs: [ get-next-prerelease, publish-prerelease ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/angular19
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          path: tests/angular19
+
+      - name: Install Prerelease Version
+        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+
+      - name: Generate Sitemap
+        run: npm run test
+
+      - name: Upload Generated Sitemap
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular19-sitemap.xml
+          path: tests/angular19/public/sitemap.xml
+
+      - name: Upload Generated Robots.txt
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular19-robots.txt
+          path: tests/angular19/public/robots.txt
+
+  analyze-angular19:
+    name: Analyze Angular 19 Output
+    needs: test-angular19
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular19-sitemap.xml
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular19-robots.txt
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Analyze Results
+        run: node ./.github/scripts/analyze-results.js 19
+
+  test-angular20:
+    name: Test Angular 20
+    needs: [ get-next-prerelease, publish-prerelease ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/angular20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          path: tests/angular20
+
+      - name: Install Prerelease Version
+        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+
+      - name: Generate Sitemap
+        run: npm run test
+
+      - name: Upload Generated Sitemap
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular20-sitemap.xml
+          path: tests/angular20/public/sitemap.xml
+
+      - name: Upload Generated Robots.txt
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular20-robots.txt
+          path: tests/angular20/public/robots.txt
+
+  analyze-angular20:
+    name: Analyze Angular 20 Output
+    needs: test-angular20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular20-sitemap.xml
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular20-robots.txt
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Analyze Results
+        run: node ./.github/scripts/analyze-results.js 20
+
+  test-angular21:
+    name: Test Angular 21
+    needs: [ get-next-prerelease, publish-prerelease ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/angular21
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          path: tests/angular21
+
+      - name: Install Prerelease Version
+        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+
+      - name: Generate Sitemap
+        run: npm run test
+
+      - name: Upload Generated Sitemap
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular21-sitemap.xml
+          path: tests/angular21/public/sitemap.xml
+
+      - name: Upload Generated Robots.txt
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular21-robots.txt
+          path: tests/angular21/public/robots.txt
+
+  analyze-angular21:
+    name: Analyze Angular 21 Output
+    needs: test-angular21
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular21-sitemap.xml
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular21-robots.txt
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Analyze Results
+        run: node ./.github/scripts/analyze-results.js 21
+
+  publish:
+    name: Publish to npm
+    needs:
+      - analyze-angular18
+      - analyze-angular19
+      - analyze-angular20
+      - analyze-angular21
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish
+        run: npm publish --tag latest
