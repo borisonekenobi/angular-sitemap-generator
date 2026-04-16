@@ -1,0 +1,5 @@
+tests/
+.github/
+.git/
+tsconfig.json
+package-lock.json
