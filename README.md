@@ -159,7 +159,7 @@ project-root/
 - You can specify custom paths for both the sitemap, robots, and MPA directories.
 - Use `--gen-robots` to create a new `robots.txt`, or `--update-robots` to update an existing one.
 - Use `--create-mpa-dir` to generate static directories for each route (fixing 404 errors on GitHub Pages).
-- Compatible with **Angular 15+** projects using standalone route definitions.
+- Compatible with **Angular 18+** projects using standalone route definitions.
 
 ---
 
