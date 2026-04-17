@@ -15,5 +15,5 @@ async function getNextPrerelease(error, stdout, stderr) {
         process.exit(1);
     }
 
-    console.log(`${JSON.parse(stdout)}-borisonekenobi`);
+    console.log(`${JSON.parse(stdout)}-${process.argv[2]}`);
 }
