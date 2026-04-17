@@ -12,25 +12,8 @@ permissions:
   contents: write
 
 jobs:
-  version-check:
-    name: Version Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Version Check
-        run: node ./.github/scripts/check-current-version.js
-
   get-next-prerelease:
     name: Get Next Prerelease Version
-    needs: version-check
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
@@ -46,7 +29,7 @@ jobs:
 
       - name: Get Prerelease Version
         id: get_version
-        run: echo "version=$(node ./.github/scripts/get-prerelease-version.js)" >> $GITHUB_OUTPUT
+        run: echo "version=$(node ./.github/scripts/get-prerelease-version.js ${{ github.triggering_actor }})" >> $GITHUB_OUTPUT
 
   publish-prerelease:
     name: Publish Prerelease Version
