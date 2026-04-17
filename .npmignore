@@ -1,0 +1,4 @@
+tests/
+.github/
+.git/
+package-lock.json
