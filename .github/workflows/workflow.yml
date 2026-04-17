@@ -4,6 +4,8 @@ on:
     branches:
       - main
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -12,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  get-next-prerelease:
-    name: Get Next Prerelease Version
+  get-version:
+    name: Get Version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
@@ -27,13 +29,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Get Prerelease Version
+      - name: Get Version
         id: get_version
-        run: echo "version=$(node ./.github/scripts/get-prerelease-version.js ${{ github.triggering_actor }})" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "version=$(node ./.github/scripts/get-version.js ${{ github.triggering_actor }})" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node ./.github/scripts/get-version.js)" >> "$GITHUB_OUTPUT"
+          fi
 
   publish-prerelease:
     name: Publish Prerelease Version
-    needs: get-next-prerelease
+    needs: get-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -43,19 +50,19 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Create Prerelease Version
-        run: npm version ${{ needs.get-next-prerelease.outputs.version }} --no-git-tag-version
+        run: npm version ${{ needs.get-version.outputs.version }} --no-git-tag-version --allow-same-version
 
       - name: Pack Prerelease Version
         run: npm pack
 
       - uses: actions/upload-artifact@v7
         with:
-          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
-          path: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
+          path: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
 
   test-angular18:
     name: Test Angular 18
-    needs: [ get-next-prerelease, publish-prerelease ]
+    needs: [ get-version, publish-prerelease ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -67,11 +74,11 @@ jobs:
           node-version: 24
       - uses: actions/download-artifact@v8
         with:
-          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
           path: tests/angular18
 
       - name: Install Prerelease Version
-        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+        run: npm install angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
 
       - name: Generate Sitemap
         run: npm run test
@@ -112,7 +119,7 @@ jobs:
 
   test-angular19:
     name: Test Angular 19
-    needs: [ get-next-prerelease, publish-prerelease ]
+    needs: [ get-version, publish-prerelease ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -124,11 +131,11 @@ jobs:
           node-version: 24
       - uses: actions/download-artifact@v8
         with:
-          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
           path: tests/angular19
 
       - name: Install Prerelease Version
-        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+        run: npm install angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
 
       - name: Generate Sitemap
         run: npm run test
@@ -169,7 +176,7 @@ jobs:
 
   test-angular20:
     name: Test Angular 20
-    needs: [ get-next-prerelease, publish-prerelease ]
+    needs: [ get-version, publish-prerelease ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -181,11 +188,11 @@ jobs:
           node-version: 24
       - uses: actions/download-artifact@v8
         with:
-          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
           path: tests/angular20
 
       - name: Install Prerelease Version
-        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+        run: npm install angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
 
       - name: Generate Sitemap
         run: npm run test
@@ -226,7 +233,7 @@ jobs:
 
   test-angular21:
     name: Test Angular 21
-    needs: [ get-next-prerelease, publish-prerelease ]
+    needs: [ get-version, publish-prerelease ]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -238,11 +245,11 @@ jobs:
           node-version: 24
       - uses: actions/download-artifact@v8
         with:
-          name: angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
           path: tests/angular21
 
       - name: Install Prerelease Version
-        run: npm install angular-sitemap-generator-${{ needs.get-next-prerelease.outputs.version }}.tgz
+        run: npm install angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
 
       - name: Generate Sitemap
         run: npm run test
