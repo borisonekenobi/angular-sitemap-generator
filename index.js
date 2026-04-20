@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const {execSync} = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const {execSync} = require("node:child_process");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const HELP = 'HELP';
 const VERSION = 'VERSION';
@@ -63,20 +63,25 @@ for (let i = 2; i < process.argv.length; i++) {
             process.exit(0);
             break;
         case VERSION:
-            const packageJson = require(path.join(__dirname, "package.json"));
-            console.log(`angular-sitemap-generator v${packageJson.version}`);
-            process.exit(0);
+            {
+                const packageJson = require(path.join(__dirname, "package.json"));
+                console.log(`angular-sitemap-generator v${packageJson.version}`);
+                process.exit(0);
+            }
             break;
         case SITEMAP_PATH:
+            if (i + 1 >= process.argv.length) throw new Error(`${arg} requires an argument value`);
             generator_options.sitemap_path = path.resolve(process.argv[++i]);
             break;
         case MPA_PATH:
+            if (i + 1 >= process.argv.length) throw new Error(`${arg} requires an argument value`);
             generator_options.mpa_path = path.resolve(process.argv[++i]);
             break;
         case MULTIPAGE_APP:
             generator_options.multipage_app = true;
             break;
         case ROBOTS_PATH:
+            if (i + 1 >= process.argv.length) throw new Error(`${arg} requires an argument value`);
             generator_options.robots_path = path.resolve(process.argv[++i]);
             break;
         case GEN_ROBOTS:
