@@ -32,8 +32,10 @@ jobs:
       - name: Get Version
         id: get_version
         run: |
+          CLEAN_ACTOR=$(echo "${{ github.actor }}" | tr -cd '[:alnum:]._-')
+          
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "version=$(node ./.github/scripts/get-version.js ${{ github.triggering_actor }})" >> "$GITHUB_OUTPUT"
+            echo "version=$(node ./.github/scripts/get-version.js $CLEAN_ACTOR)" >> "$GITHUB_OUTPUT"
           else
             echo "version=$(node ./.github/scripts/get-version.js)" >> "$GITHUB_OUTPUT"
           fi
