@@ -52,6 +52,12 @@ jobs:
       - name: Create Prerelease Version
         run: npm version ${{ needs.get-version.outputs.version }} --no-git-tag-version --allow-same-version
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
       - name: Pack Prerelease Version
         run: npm pack
 
@@ -288,6 +294,63 @@ jobs:
       - name: Analyze Results
         run: node ./.github/scripts/analyze-results.js 21
 
+  test-angular22:
+    name: Test Angular 22
+    needs: [ get-version, publish-prerelease ]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/angular22
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
+          path: tests/angular22
+
+      - name: Install Prerelease Version
+        run: npm install angular-sitemap-generator-${{ needs.get-version.outputs.version }}.tgz
+
+      - name: Generate Sitemap
+        run: npm run test
+
+      - name: Upload Generated Sitemap
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular22-sitemap.xml
+          path: tests/angular22/public/sitemap.xml
+
+      - name: Upload Generated Robots.txt
+        uses: actions/upload-artifact@v7
+        with:
+          name: angular22-robots.txt
+          path: tests/angular22/public/robots.txt
+
+  analyze-angular22:
+    name: Analyze Angular 22 Output
+    needs: test-angular22
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular22-sitemap.xml
+      - uses: actions/download-artifact@v8
+        with:
+          name: angular22-robots.txt
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Analyze Results
+        run: node ./.github/scripts/analyze-results.js 22
+
   publish:
     name: Publish to npm
     needs:
@@ -295,6 +358,7 @@ jobs:
       - analyze-angular19
       - analyze-angular20
       - analyze-angular21
+      - analyze-angular22
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:

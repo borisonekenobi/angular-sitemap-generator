@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "../../dist/sitemap/",
+    "outDir": "./dist/",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -12,19 +12,18 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node",
     "importHelpers": true,
     "target": "ES2022",
     "module": "CommonJS",
-    "baseUrl": "../../src"
+    "types": [
+      "node"
+    ]
   },
   "include": [
-    "./generator.ts",
-    "../../src/app/**/*.ts"
+    "./**/*.ts"
   ],
   "exclude": [
-    "../../**/*.spec.ts",
-    "../../**/*.test.ts"
+    "./tests/**/*"
   ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
