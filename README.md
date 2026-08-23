@@ -26,18 +26,25 @@ The `/` at the end of the URL is optional — the generator adds it automaticall
 
 ---
 
+## ⚙️ CLI Arguments
+
+| Argument | Description                                                                                                   |
+|:---------|:--------------------------------------------------------------------------------------------------------------|
+| `url`    | The base URL of your Angular app (e.g., `https://example.com/`). This is required for generating the sitemap. |
+
 ## ⚙️ CLI Options
 
-| Short       | Long Form              | Description                                                                                    |
-|:------------|:-----------------------|:-----------------------------------------------------------------------------------------------|
-| `-h`        | `--help`               | Shows the help menu                                                                            |
-| `-v`        | `--version`            | Displays the current package version                                                           |
-| `-p <path>` | `--path <path>`        | Sets the path where the generated `sitemap.xml` file will be saved                             |
-| `-c`        | `--create-mpa-dir`     | Generates MPA-style directories in the public folder (for GitHub Pages and other static hosts) |
-| `-m <path>` | `--mpa-path <path>`    | Sets a custom path for the generated MPA directories                                           |
-| `-r <path>` | `--robots-path <path>` | Sets the path of the `robots.txt` file                                                         |
-| `-g`        | `--gen-robots`         | Generates a new `robots.txt` file if one doesn’t exist                                         |
-| `-u`        | `--update-robots`      | Updates the existing `robots.txt` file to include a link to the sitemap                        |
+| Short | Long Form              | Description                                                                                    |
+|:------|:-----------------------|:-----------------------------------------------------------------------------------------------|
+| `-v`  | `--version`            | Output the current version of the package                                                      |
+| `-i`  | `--input <path>`       | Sets the path of the routes file                                                               |
+| `-o`  | `--output <path>`      | Sets the path of the sitemap file                                                              |
+| `-c`  | `--create-mpa-dir`     | Generates MPA-style directories in the public folder (for GitHub Pages and other static hosts) |
+| `-m`  | `--mpa-path <path>`    | Sets a custom path for the generated MPA directories                                           |
+| `-r`  | `--robots-path <path>` | Sets the path of the `robots.txt` file                                                         |
+| `-g`  | `--gen-robots`         | Generates a new `robots.txt` file if one doesn’t exist                                         |
+| `-u`  | `--update-robots`      | Updates the existing `robots.txt` file to include a link to the sitemap                        |
+| `-h`  | `--help`               | Shows the help menu                                                                            |
 
 ---
 
