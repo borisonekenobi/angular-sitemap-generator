@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 
+require('@angular/compiler');
+const { VERSION: coreVersion } = require('@angular/core');
+const { VERSION: routerVersion } = require('@angular/router');
+
+if (parseInt(coreVersion.major) >= 22 || parseInt(routerVersion.major) >= 22) {
+    console.error('🚨 [angular-sitemap-generator] You are using an Angular 18-21 package on Angular 22+. Please switch to \'angular-v22-sitemap-generator\' to prevent build failures.');
+    process.exit(1);
+}
+
 const {execSync} = require("child_process");
 const fs = require("fs");
 const path = require("path");

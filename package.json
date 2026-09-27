@@ -36,8 +36,8 @@
     "@types/node": "^26.6.2"
   },
   "peerDependencies": {
-    "@angular/compiler": ">=18",
-    "@angular/router": ">=18"
+    "@angular/compiler": ">=18 <22",
+    "@angular/router": ">=18 <22"
   },
   "devDependencies": {
     "fast-xml-parser": "^5.11.1",
