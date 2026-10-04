@@ -33,7 +33,7 @@
     "test": "node ./index.js"
   },
   "dependencies": {
-    "@types/node": "^26.6.2"
+    "@types/node": "^26.6.3"
   },
   "peerDependencies": {
     "@angular/compiler": ">=18 <22",
